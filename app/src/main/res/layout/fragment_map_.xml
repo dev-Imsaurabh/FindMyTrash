@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <com.google.android.gms.maps.MapView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/mapView"
+        android:layout_width="match_parent"
+        android:visibility="visible"
+        android:layout_height="match_parent" />
+
+<!--    <com.mancj.materialsearchbar.MaterialSearchBar-->
+<!--        android:id="@+id/searchBar"-->
+<!--        style="@style/MaterialSearchBarLight"-->
+<!--        app:mt_hint="Search a place"-->
+<!--        app:mt_maxSuggestionsCount="10"-->
+<!--        app:mt_speechMode="false"-->
+<!--        android:layout_margin="16dp"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:visibility="gone"-->
+<!--        android:elevation="10dp"-->
+<!--        android:outlineProvider="bounds"-->
+<!--        app:mt_placeholder="Search with address,Pincode"-->
+<!--        android:layout_height="60dp" />-->
+
+    <EditText
+        android:id="@+id/searchBar"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:visibility="gone"
+        android:layout_marginEnd="16dp"
+        android:hint="Search a place by address,pin code.."
+        android:layout_marginBottom="16dp"
+        android:background="@android:drawable/edit_text"
+        android:backgroundTint="@color/white"
+        android:drawableLeft="@drawable/ic_search"
+        android:drawablePadding="10dp" />
+
+    <com.skyfishjy.library.RippleBackground
+        android:id="@+id/ripple_effect"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:rb_color="#0099CC"
+        app:rb_duration="3000"
+        app:rb_radius="32dp"
+        app:rb_rippleAmount="4"
+        app:rb_scale="6">
+
+        <ImageView
+            android:id="@+id/custom_marker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/custom_marker"
+            android:translationY="-24dp"
+            android:visibility="gone" />
+
+    </com.skyfishjy.library.RippleBackground>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="60dp"
+        android:backgroundTint="#FF9800"
+        android:elevation="10dp"
+        android:visibility="gone"
+        android:src="@drawable/ic_search"
+        app:borderWidth="0dp"
+        app:tint="@color/white" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_marker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/fab_search"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="32dp"
+        android:backgroundTint="#E91E63"
+        android:elevation="10dp"
+        android:src="@drawable/ic_add_marker"
+        android:visibility="visible"
+        app:borderWidth="0dp"
+        app:tint="@color/white" />
+
+<!--    <fragment-->
+<!--        class="com.google.android.gms.maps.SupportMapFragment"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:id="@+id/mapFragment"-->
+<!--        android:layout_height="match_parent"/>-->
+
+</RelativeLayout>

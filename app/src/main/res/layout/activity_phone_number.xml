@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/gradient_btn"
+    android:fillViewport="true"
+    tools:context=".Login.PhoneNumber_Activity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        tools:ignore="ScrollViewSize">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/info"
+            android:text="Find My Bin\nSign Up"
+            android:textColor="@color/white"
+            android:textSize="30dp"
+            android:gravity="center"/>
+
+        <ImageView
+            android:layout_width="500px"
+            android:layout_height="500px"
+            android:src="@drawable/ic_svg_trash"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:id="@+id/name"
+            android:layout_margin="16dp"
+            android:padding="8dp"
+            android:visibility="gone"
+            android:background="@drawable/border4"
+            android:maxLines="1"
+            android:inputType="text"
+            android:layout_height="60dp"
+            android:gravity="center_vertical"
+            android:hint="Enter your name..">
+        </EditText>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+
+            <EditText
+                android:id="@+id/countryCodeBox"
+                android:layout_width="80dp"
+                android:maxLength="3"
+                android:maxLines="1"
+                android:textSize="22sp"
+                android:layout_height="60dp"
+                android:inputType="phone"
+                android:background="@drawable/border1"
+                android:padding="8dp"
+                android:gravity="center"
+                android:text="+91">
+            </EditText>
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/gradient_btn"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:id="@+id/phoneNumberBox"
+                android:padding="8dp"
+                android:imeOptions="actionDone"
+                android:background="@drawable/border2"
+                android:maxLength="10"
+                android:maxLines="1"
+                android:importantForAutofill="no"
+                android:inputType="phone"
+                android:layout_height="60dp"
+                android:gravity="center_vertical"
+                android:hint="Enter phone number..">
+            </EditText>
+
+
+        </LinearLayout>
+
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <androidx.cardview.widget.CardView
+                android:layout_width="250dp"
+                android:id="@+id/signup_btn"
+                android:layout_height="50dp"
+                app:cardElevation="0dp"
+                android:layout_gravity="center"
+                app:cardCornerRadius="100dp">
+
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/gradient_btn">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:paddingStart="16dp"
+                        android:text="Proceed"
+                        android:textColor="@color/white"
+                        android:textSize="22sp"
+                        android:textStyle="italic">
+
+                    </TextView>
+
+                    <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginEnd="4dp"
+                        android:src="@drawable/ic_arrow"
+                        android:background="@drawable/white_circulatr_back"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        app:civ_border_color="@color/white"
+                        app:civ_border_width="2dp" />
+
+                </RelativeLayout>
+
+            </androidx.cardview.widget.CardView>
+
+
+            <ProgressBar
+                android:layout_width="35dp"
+                android:layout_gravity="center"
+                android:layout_height="35dp"
+                android:indeterminateTint="#FFC107"
+                android:id="@+id/progressBar"
+                android:visibility="gone"/>
+
+
+
+        </FrameLayout>
+
+
+
+
+
+    </LinearLayout>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="150dp"
+            android:id="@+id/login_btn"
+            android:layout_height="50dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="8dp"
+            app:cardElevation="0dp"
+            app:cardCornerRadius="100dp">
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/gradient_btn">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:id="@+id/login_info"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingStart="16dp"
+                    android:text="Login"
+                    android:textColor="@color/white"
+                    android:textSize="22sp"
+                    android:textStyle="italic">
+
+                </TextView>
+
+                <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginEnd="4dp"
+                    android:src="@drawable/ic_arrow"
+                    android:background="@drawable/white_circulatr_back"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    app:civ_border_color="@color/white"
+                    app:civ_border_width="2dp" />
+
+            </RelativeLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <View
+            android:id="@+id/view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="0.0"
+            android:background="@color/white"
+            android:elevation="10dp">
+
+        </View>
+
+
+    </RelativeLayout>
+
+
+
+</ScrollView>

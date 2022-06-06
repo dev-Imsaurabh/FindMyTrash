@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_gravity="center"
+    android:layout_margin="8dp"
+    android:layout_height="wrap_content">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_margin="4dp"
+        app:cardElevation="6dp"
+        app:cardCornerRadius="10dp"
+        android:layout_height="100dp">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/gradient_btn"/>
+
+    </androidx.cardview.widget.CardView>
+
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        app:cardCornerRadius="10dp"
+        android:layout_marginEnd="4dp"
+        android:id="@+id/card"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="8dp"
+        app:cardElevation="8dp"
+        android:layout_marginStart="12dp"
+        android:layout_height="100dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:scaleX="2"
+                android:scaleY="2"
+                android:id="@+id/binImage"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_svg_trash_marker"/>
+
+            <TextView
+                android:id="@+id/name_txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_toEndOf="@id/binImage"
+                android:text="Marked by :- Saurabh Kumar"
+                android:textSize="12dp" />
+
+            <TextView
+                android:id="@+id/pin_txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/name_txt"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="2dp"
+                android:layout_toEndOf="@id/binImage"
+                android:text="221002"
+                android:textSize="12dp" />
+
+            <TextView
+                android:id="@+id/near_txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/pin_txt"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="2dp"
+                android:layout_toEndOf="@id/binImage"
+                android:ellipsize="end"
+                android:maxWidth="120dp"
+                android:text="Near royal enfield showroom"
+                android:textSize="10dp" />
+
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="32dp"
+                android:layout_marginEnd="16dp"
+                android:id="@+id/pin_loc"
+                android:src="@drawable/location_pin"/>
+
+            <TextView
+                android:id="@+id/distance_txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/pin_loc"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="4dp"
+                android:gravity="center"
+                android:layout_marginEnd="8dp"
+                android:text="Away approx 2.2 km"
+                android:textSize="12dp" />
+
+
+
+
+
+        </RelativeLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</RelativeLayout>

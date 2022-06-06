@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:background="@drawable/gradient_btn"
+    android:layout_height="match_parent"
+    tools:context=".NearBy.NearByActivity">
+
+
+
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:clickable="true"
+        android:focusable="true"
+        android:elevation="10dp"
+        android:layout_height="match_parent"
+        android:id="@+id/fragment" />
+
+
+    <WebView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/webView"/>
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/progressBar"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_centerInParent="true"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
+        app:lottie_rawRes="@raw/circle_anim" />
+
+</RelativeLayout>

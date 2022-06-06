@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "591127156254",
+    "project_id": "findmybin-92e07",
+    "storage_bucket": "findmybin-92e07.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:591127156254:android:8fea3812ffb8fe50ccc00f",
+        "android_client_info": {
+          "package_name": "com.mac.findmytrash"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "591127156254-lgt5v6r8a9vm17frcgffmgtiksr623mc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAfn-lmTBrEDpTnJj3l3Li1KGyQoJ1tEZM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "591127156254-lgt5v6r8a9vm17frcgffmgtiksr623mc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

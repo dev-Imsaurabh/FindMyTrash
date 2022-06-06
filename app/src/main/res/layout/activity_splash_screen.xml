@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/gradient_btn"
+    android:orientation="vertical"
+    tools:context=".Splash_Screen_Activity">
+
+
+    <com.skyfishjy.library.RippleBackground
+        android:id="@+id/ripple_effect"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:rb_color="#FFFFFF"
+        app:rb_duration="1000"
+        app:rb_radius="32dp"
+        app:rb_rippleAmount="4"
+        app:rb_scale="6">
+
+    </com.skyfishjy.library.RippleBackground>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/custom_font"
+        android:text="Find All Trash bin Near You !"
+        android:textColor="@color/white"
+        android:textSize="16dp" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_width="500dp"
+        android:layout_height="500dp"
+        android:id="@+id/location_pin"
+        android:padding="24dp"
+        android:layout_centerInParent="true"
+        android:src="@drawable/app_icon"/>
+
+<!--    <ImageView-->
+<!--        android:layout_width="200dp"-->
+<!--        android:layout_marginTop="48dp"-->
+<!--        android:layout_alignParentRight="true"-->
+<!--        android:layout_height="200dp"-->
+<!--        android:src="@drawable/ic_swach_bharat"/>-->
+
+
+<!--    <ImageView-->
+<!--        android:id="@+id/india_map"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="50dp"-->
+<!--        android:scaleType="fitCenter"-->
+<!--        android:src="@drawable/ic_svg_inida_map" />-->
+
+<!--    <ImageView-->
+<!--        android:id="@+id/location_pin"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_centerInParent="true"-->
+<!--        android:scaleY="1.1"-->
+<!--        android:src="@drawable/ic_svg_location_pin" />-->
+
+<!--    <ImageView-->
+<!--        android:layout_width="150dp"-->
+<!--        android:layout_height="150dp"-->
+<!--        android:layout_alignParentBottom="true"-->
+<!--        android:id="@+id/trash"-->
+<!--        android:layout_marginBottom="130dp"-->
+<!--        android:src="@drawable/ic_svg_trash"-->
+<!--        android:layout_centerHorizontal="true"/>-->
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/name"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="60dp"
+        android:drawableStart="@drawable/ic_bulb"
+        android:text="For the people, By the people !"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:textStyle="italic" />
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="32dp"
+        android:text="Find My Trash"
+        android:textSize="22sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:text="Made in India"
+        android:layout_marginBottom="4dp"
+        android:gravity="center_vertical"
+        android:drawablePadding="4dp"
+        android:drawableStart="@drawable/indian_flag"/>
+
+
+
+
+
+</RelativeLayout>
