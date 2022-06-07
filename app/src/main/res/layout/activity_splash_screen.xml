@@ -28,7 +28,7 @@
 
         android:layout_marginTop="16dp"
         android:fontFamily="@font/custom_font"
-        android:text="Find All Trash bin Near You !"
+        android:text="Find All Trashcan Near You !"
         android:textColor="@color/white"
         android:textSize="16dp" />
 
@@ -92,7 +92,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="32dp"
-        android:text="Find My Trash"
+        android:text="Find My Trashcan"
         android:textSize="22sp" />
 
     <TextView

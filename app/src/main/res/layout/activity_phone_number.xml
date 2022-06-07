@@ -17,7 +17,7 @@
             android:id="@+id/info"
             android:fontFamily="@font/custom_font"
             android:layout_marginTop="48dp"
-            android:text="Find My Bin\nSign Up"
+            android:text="Find My Trashcan\nSign Up"
             android:textColor="@color/white"
             android:textSize="30dp"
             android:gravity="center"/>

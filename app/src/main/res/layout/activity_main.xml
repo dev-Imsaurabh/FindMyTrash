@@ -131,7 +131,7 @@
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
                 android:paddingStart="16dp"
-                android:text="Trash near me"
+                android:text="Trashcan near me"
                 android:textColor="@color/white"
                 android:textSize="22sp"
                 android:textStyle="italic"></TextView>

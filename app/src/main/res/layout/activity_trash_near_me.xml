@@ -29,10 +29,11 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="16dp"
+                android:fontFamily="@font/custom_font"
                 android:elevation="20dp"
-                android:text="Showing all Trash near you"
+                android:text="Showing all Trashcan near you"
                 android:textColor="@color/white"
-                android:textSize="22sp">
+                android:textSize="16sp">
 
 
             </TextView>
