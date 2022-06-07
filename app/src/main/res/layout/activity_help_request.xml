@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:layout_height="match_parent">
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     tools:context=".help_request.HelpRequestActivity">
 
     <com.skyfishjy.library.RippleBackground
@@ -96,9 +101,9 @@
                 android:id="@+id/text_timer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
                 android:layout_marginBottom="8dp"
-                android:layout_marginStart="16dp"
+                android:layout_above="@id/req_progressBar"
+                android:layout_alignStart="@+id/req_progressBar"
                 android:shadowColor="@color/black"
                 android:shadowDx="1"
                 android:shadowDy="1"
@@ -125,3 +130,4 @@
 
 
 </RelativeLayout>
+</ScrollView>

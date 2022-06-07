@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -102,7 +103,39 @@ public class TrashNearMeActivity extends AppCompatActivity {
         send_help_request_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ShowDialog();
+                if(!PrefConfig.GetPref(TrashNearMeActivity.this,"requestPref","request").equals("error")){
+                    double checkDifference = System.currentTimeMillis()-Double.parseDouble(PrefConfig.GetPref(TrashNearMeActivity.this,"requestPref","request"));
+                    if(checkDifference>180000){
+                        ShowDialog();
+
+                    }else {
+                        MediaPlayer mp = MediaPlayer.create(getApplicationContext(), R.raw.error_sound);
+                        mp.start();
+                        final Dialog dialog = new Dialog(TrashNearMeActivity.this);
+
+                        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                        dialog.setCancelable(true);
+                        dialog.setContentView(R.layout.request_warning_dialog);
+                        CardView cancel_dialog_btn = (CardView)dialog.findViewById(R.id.cancel_dialog_btn);
+                        TextView warning_text =(TextView) dialog.findViewById(R.id.warning_txt);
+
+                        warning_text.setText("You are eligible to send new request after\n"+String.valueOf((int) (180-checkDifference/1000))+" seconds.");
+
+                        cancel_dialog_btn.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                dialog.dismiss();
+                            }
+                        });
+
+
+                        dialog.show();
+
+
+                    }
+                }else {
+                    ShowDialog();
+                }
             }
         });
 
@@ -235,6 +268,7 @@ public class TrashNearMeActivity extends AppCompatActivity {
                 editor.clear();
                 editor.commit();
 
+                                Toast.makeText(TrashNearMeActivity.this, "REQUEST SENT", Toast.LENGTH_SHORT).show();
 
                 Intent intent = new Intent(TrashNearMeActivity.this, HelpRequestActivity.class);
                 startActivity(intent);

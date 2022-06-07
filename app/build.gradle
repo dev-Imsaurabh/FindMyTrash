@@ -71,7 +71,8 @@ dependencies {
     implementation "com.airbnb.android:lottie:$lottieVersion"
 
     implementation "com.karumi:dexter:6.2.2"
-
+    implementation "com.google.android.gms:play-services-auth:20.2.0"
+    implementation "com.google.android.gms:play-services-auth-api-phone:18.0.1"
 
 
 }

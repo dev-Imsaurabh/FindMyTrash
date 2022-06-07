@@ -43,6 +43,7 @@ public class HelpRequestActivity extends AppCompatActivity {
     private FirebaseAuth auth;
     private FirebaseUser user;
     private  boolean no_help=false;
+    private boolean  time_out =false;
     Handler handler;
 
     Runnable runnable;
@@ -52,6 +53,7 @@ public class HelpRequestActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_help_request);
+        PrefConfig.SetPref(HelpRequestActivity.this,"requestPref","request",String.valueOf(System.currentTimeMillis()));
         hideStatusBar();
         rippleBackground = findViewById(R.id.ripple_effect);
         close_request_btn = findViewById(R.id.close_req_btn);
@@ -104,6 +106,7 @@ public class HelpRequestActivity extends AppCompatActivity {
 
                             PushNotification pushNotification = new PushNotification(new NotificationData("cancel","cancel"+user.getUid()),topic);
                             SendNotification.Send(pushNotification,HelpRequestActivity.this);
+                            Toast.makeText(HelpRequestActivity.this, "removed", Toast.LENGTH_SHORT).show();
                             DrawerClose();
                             ViewLocationDialog(rPref);
 
@@ -129,10 +132,11 @@ public class HelpRequestActivity extends AppCompatActivity {
     }
 
     private void ViewLocationDialog(String rPref) {
+        time_out=true;
         String[] splitMessageByComma = rPref.split(",");
 
-            String longitude = splitMessageByComma[0];
-            String latitude = splitMessageByComma[1];
+            String latitude = splitMessageByComma[0];
+            String longitude = splitMessageByComma[1];
             String name = splitMessageByComma[2];
             String displayMessage = splitMessageByComma[3];
 
@@ -180,7 +184,15 @@ public class HelpRequestActivity extends AppCompatActivity {
     }
 
     private void CallNoUserFoundFunction() {
+        time_out=true;
+        handler.removeCallbacksAndMessages(null);
+        String topic ="/topics/"+ PrefConfig.GetPref(HelpRequestActivity.this,"pinCode","code");
+//                            String topic ="/topics/"+ "250001";
+
+        PushNotification pushNotification = new PushNotification(new NotificationData("cancel","cancel"+user.getUid()),topic);
+        SendNotification.Send(pushNotification,HelpRequestActivity.this);
         DrawerClose();
+        TimoutDialog();
 
 
 
@@ -268,7 +280,8 @@ public class HelpRequestActivity extends AppCompatActivity {
 
 
     private void ShowDialog() {
-
+        MediaPlayer mp = MediaPlayer.create(getApplicationContext(), R.raw.error_sound);
+        mp.start();
 
         final Dialog dialog = new Dialog(HelpRequestActivity.this);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -310,11 +323,36 @@ public class HelpRequestActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        ShowDialog();
+        if(time_out){
+
+         TimoutDialog();
+
+        }else{
+            ShowDialog();
+
+        }
 
     }
 
+    private void TimoutDialog() {
+        MediaPlayer mp = MediaPlayer.create(getApplicationContext(), R.raw.error_sound);
+        mp.start();
+        final Dialog dialog = new Dialog(HelpRequestActivity.this);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.time_out_dialog);
 
+        CardView time_out_btn = (CardView) dialog.findViewById(R.id.close_timeout_btn);
+        time_out_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+                finish();
+
+            }
+        });
+        dialog.show();
+    }
 
 
     private void ShowViaDialog(String latitude,String longitude) {
@@ -331,7 +369,7 @@ public class HelpRequestActivity extends AppCompatActivity {
         walking_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Uri gmmIntentUri = Uri.parse("google.navigation:q=" + latitude + "," + longitude+"&mode=w");
+                Uri gmmIntentUri = Uri.parse("google.navigation:q=" + latitude + "," +longitude+"&mode=w");
                 //String url = "https://www.google.com/maps/dir/?api=1&destination=" + submitModel.getSubmitLat() + "," + submitModel.getSubmitLong() + "&travelmode=driving";
 
                 Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
@@ -345,7 +383,8 @@ public class HelpRequestActivity extends AppCompatActivity {
         driving_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Uri gmmIntentUri = Uri.parse("google.navigation:q=" + latitude + "," + longitude);
+                Uri gmmIntentUri = Uri.parse("google.navigation:q=" + latitude+ "," + longitude);
+
                 //String url = "https://www.google.com/maps/dir/?api=1&destination=" + submitModel.getSubmitLat() + "," + submitModel.getSubmitLong() + "&travelmode=driving";
 
                 Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);

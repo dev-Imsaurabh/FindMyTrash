@@ -1,10 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@drawable/gradient_btn"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:layout_height="match_parent">
+
+
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     tools:context=".MainActivity">
 
     <ImageView
@@ -58,7 +66,7 @@
             android:layout_toEndOf="@id/iv_profile"
             android:text="PinCode"
             android:textColor="@color/white"
-            android:textSize="14dp" />
+            android:textSize="10dp" />
 
 
     </RelativeLayout>
@@ -286,3 +294,5 @@
 
 
 </RelativeLayout>
+
+</ScrollView>

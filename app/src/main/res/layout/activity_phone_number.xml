@@ -11,19 +11,12 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:orientation="vertical"
-        tools:ignore="ScrollViewSize">
-
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/info"
+            android:fontFamily="@font/custom_font"
+            android:layout_marginTop="48dp"
             android:text="Find My Bin\nSign Up"
             android:textColor="@color/white"
             android:textSize="30dp"
@@ -31,8 +24,24 @@
 
         <ImageView
             android:layout_width="500px"
+            android:layout_below="@id/info"
+            android:id="@+id/image"
+            android:layout_centerHorizontal="true"
             android:layout_height="500px"
             android:src="@drawable/ic_svg_trash"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/image"
+        android:id="@+id/ll"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        tools:ignore="ScrollViewSize">
+
+
+
 
         <EditText
             android:layout_width="match_parent"
@@ -52,6 +61,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
+
             android:gravity="center"
             android:orientation="horizontal">
 
@@ -96,6 +106,7 @@
 
         <FrameLayout
             android:layout_width="match_parent"
+            android:id="@+id/frame"
             android:layout_height="wrap_content">
             <androidx.cardview.widget.CardView
                 android:layout_width="250dp"
@@ -160,10 +171,11 @@
         <androidx.cardview.widget.CardView
             android:layout_width="150dp"
             android:id="@+id/login_btn"
+            android:layout_below="@id/ll"
+
             android:layout_height="50dp"
-            android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:layout_margin="8dp"
+            android:layout_marginTop="16dp"
             app:cardElevation="0dp"
             app:cardCornerRadius="100dp">
 
@@ -174,8 +186,8 @@
                 android:background="@drawable/gradient_btn">
 
                 <TextView
-                    android:layout_width="wrap_content"
                     android:id="@+id/login_info"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
                     android:paddingStart="16dp"

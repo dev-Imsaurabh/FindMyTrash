@@ -18,6 +18,7 @@ import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -350,33 +351,69 @@ public class Map_Fragment extends Fragment implements OnMapReadyCallback {
         shareBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+//                Toast.makeText(getContext(), PrefConfig.GetPref(getContext(), "tempTopic", "topic"), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getContext(), uid, Toast.LENGTH_SHORT).show();
+                if(PrefConfig.GetPref(getContext(), "tempTopic", "topic").equals(uid)){
 
-                String latitude = String.valueOf(pinLatitude);
+
+
+                    String latitude = String.valueOf(pinLatitude);
 //                String latitude = "29.017652732110413";
-                String longitude =String.valueOf(pinLongitude);
+                    String longitude =String.valueOf(pinLongitude);
 //                String longitude = "77.7619469538331";
-                String topic ="/topics/"+uid;
+                    String topic ="/topics/"+uid;
 //                String topic ="/topics/"+"250001";
-                String phoneNumber =user.getPhoneNumber();
+                    String phoneNumber =user.getPhoneNumber();
 
-                String displayMessage ="Hey I am "+PrefConfig.GetPref(getContext(), "userPref", "username")+" sharing you dustbin location near by you";
+                    String displayMessage ="Hey I am "+PrefConfig.GetPref(getContext(), "userPref", "username")+" sharing you dustbin location near by you";
 
-                String message = latitude+","+longitude+","+shared_username.getText().toString()+","+displayMessage+","+phoneNumber;
+                    String message = latitude+","+longitude+","+shared_username.getText().toString()+","+displayMessage+","+phoneNumber;
 
-                PushNotification pushNotification = new PushNotification(new NotificationData("Received Help",message),topic);
-                SendNotification.Send(pushNotification,getContext());
-                dialog.dismiss();
+                    PushNotification pushNotification = new PushNotification(new NotificationData("Received Help",message),topic);
+                    SendNotification.Send(pushNotification,getContext());
+                    dialog.dismiss();
 
-                SharedPreferences preferences = getContext().getSharedPreferences("helpPref",MODE_PRIVATE);
-                SharedPreferences.Editor editor = preferences.edit();
-                editor.clear();
-                editor.commit();
-                FirebaseMessaging.getInstance().unsubscribeFromTopic("cancel"+uid);
+                    SharedPreferences preferences = getContext().getSharedPreferences("helpPref",MODE_PRIVATE);
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.clear();
+                    editor.commit();
+                    FirebaseMessaging.getInstance().unsubscribeFromTopic("cancel"+uid);
 
-                Intent intent = new Intent(getContext(), MainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-                getActivity().overridePendingTransition(R.anim.fade_in,R.anim.slide_up);
+                    PrefConfig.SetPref(getContext(),"userHelp","user","true");
+
+                    Toast.makeText(getContext(), "LOCATION SENT", Toast.LENGTH_SHORT).show();
+
+
+                    Intent intent = new Intent(getContext(), MainActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                    getActivity().overridePendingTransition(R.anim.fade_in,R.anim.slide_up);
+
+
+                } else {
+                    dialog.dismiss();
+                    MediaPlayer mp = MediaPlayer.create(getContext(), R.raw.error_sound);
+                    mp.start();
+                    Dialog dialog1 = new Dialog(getActivity());
+                    dialog1.setCancelable(false);
+                    dialog1.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                    dialog1.setContentView(R.layout.session_expired_warning_dialog);
+
+
+                    CardView gobackBtn = (CardView) dialog1.findViewById(R.id.go_back_btn);
+                    gobackBtn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            PrefConfig.SetPref(getContext(),"userHelp","user","true");
+
+                            dialog1.dismiss();
+                            getActivity().finish();
+                        }
+                    });
+
+                    dialog1.show();
+
+                }
 
 
             }
@@ -391,12 +428,17 @@ public class Map_Fragment extends Fragment implements OnMapReadyCallback {
 
     private BitmapDescriptor bitmapDescriptor(Context context, int iconId) {
 
-        Drawable iconDrawable = ContextCompat.getDrawable(context, iconId);
-        iconDrawable.setBounds(0, 0, iconDrawable.getIntrinsicWidth(), iconDrawable.getIntrinsicHeight());
-        Bitmap bitmap = Bitmap.createBitmap(iconDrawable.getIntrinsicWidth(), iconDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Bitmap bitmap = null;
+        try {
+            Drawable iconDrawable = ContextCompat.getDrawable(context, iconId);
+            iconDrawable.setBounds(0, 0, iconDrawable.getIntrinsicWidth(), iconDrawable.getIntrinsicHeight());
+            bitmap = Bitmap.createBitmap(iconDrawable.getIntrinsicWidth(), iconDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
 
-        Canvas canvas = new Canvas(bitmap);
-        iconDrawable.draw(canvas);
+            Canvas canvas = new Canvas(bitmap);
+            iconDrawable.draw(canvas);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return BitmapDescriptorFactory.fromBitmap(bitmap);
 
     }
@@ -671,20 +713,24 @@ public class Map_Fragment extends Fragment implements OnMapReadyCallback {
 
 
     public void getLocation(GoogleMap map, Task<Location> task) {
-        Marker marker;
-        Location location = task.getResult();
-        double currentLatitude = location.getLatitude();
-        double currentLongitude = location.getLongitude();
-        LatLng latLng = new LatLng(currentLatitude, currentLongitude);
-        MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.icon(bitmapDescriptor(getContext(), R.drawable.custom_marker));
-        markerOptions.position(latLng);
-        markerOptions.title("i am here");
-        marker = map.addMarker(markerOptions);
-        marker.setTag("user");
-        float zoomLevel = 13.0f; //This goes up to 21
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoomLevel));
-        GetPostalCode(currentLatitude, currentLongitude);
+        try {
+            Marker marker;
+            Location location = task.getResult();
+            double currentLatitude = location.getLatitude();
+            double currentLongitude = location.getLongitude();
+            LatLng latLng = new LatLng(currentLatitude, currentLongitude);
+            MarkerOptions markerOptions = new MarkerOptions();
+            markerOptions.icon(bitmapDescriptor(getContext(), R.drawable.custom_marker));
+            markerOptions.position(latLng);
+            markerOptions.title("i am here");
+            marker = map.addMarker(markerOptions);
+            marker.setTag("user");
+            float zoomLevel = 13.0f; //This goes up to 21
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoomLevel));
+            GetPostalCode(currentLatitude, currentLongitude);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
 
     }

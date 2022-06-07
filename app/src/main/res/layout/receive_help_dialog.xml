@@ -5,76 +5,87 @@
     android:layout_gravity="center"
     app:cardElevation="16dp"
     app:cardCornerRadius="20dp"
-    android:layout_height="360dp">
+    android:layout_height="370dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:padding="4dp"
-
         android:background="@drawable/gradient_btn"
         android:layout_height="match_parent">
 
-        <ImageView
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_margin="8dp"
-            android:layout_centerHorizontal="true"
-            android:src="@drawable/ic_active"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:text="Help Request"
+            android:gravity="center"
+            android:fontFamily="@font/custom_font"
+            android:textSize="20sp"
+            android:background="@color/white"/>
 
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="8dp"
+            android:layout_above="@id/ll2"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:src="@drawable/ic_help_active" />
 
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
+            android:id="@+id/ll2"
+            android:layout_marginBottom="100dp"
+            android:layout_alignParentBottom="true"
             android:orientation="vertical">
 
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="From"
-                android:paddingEnd="8dp"
-                android:paddingStart="8dp"
-                android:background="@drawable/border4"
-                android:layout_marginBottom="8dp"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="4dp"/>
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/border4"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:text="From" />
 
             <TextView
+                android:id="@+id/user_name"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:background="@drawable/border3"
-                android:text="Saurabh Kumar"
-                android:textColor="@color/white"
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
+                android:background="@drawable/border3"
                 android:gravity="center_vertical"
                 android:paddingStart="8dp"
-                android:id="@+id/user_name"/>
+                android:text="Saurabh Kumar"
+                android:textColor="@color/white" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/border4"
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"
-                android:background="@drawable/border4"
-                android:layout_marginTop="8dp"
                 android:text="Message" />
 
             <TextView
+                android:id="@+id/et_displayMsg"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingStart="8dp"
-                android:maxLength="100"
-                android:id="@+id/et_displayMsg"
-                android:background="@drawable/border3"
-                android:textStyle="normal"
-                android:padding="8dp"
-                android:textColor="@color/white"
                 android:layout_margin="8dp"
-                android:text="Hey I need help for finding dustbin 🗑 in you area 😊"/>
+                android:background="@drawable/border3"
+                android:maxLength="100"
+                android:padding="8dp"
+                android:paddingStart="8dp"
+                android:text="Hey I need help for finding dustbin 🗑 in you area 😊"
+                android:textColor="@color/white"
+                android:textStyle="normal" />
 
 
         </LinearLayout>

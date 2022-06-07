@@ -3,11 +3,16 @@ package com.mac.findmytrash;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.location.LocationManager;
+import android.media.MediaPlayer;
+import android.net.ConnectivityManager;
+import android.net.NetworkCapabilities;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -27,9 +32,11 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
@@ -86,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView user_name;
     private String showMapIntent;
     private View drawer_helper;
+    private boolean userChoice =false;
     private boolean isUserAvailable = false;
 
 
@@ -94,6 +102,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         showMapIntent=getIntent().getStringExtra("showMap");
 
         PrefConfig.SetPref(MainActivity.this, "markerPref", "marker", "0");
@@ -101,7 +110,9 @@ public class MainActivity extends AppCompatActivity {
         user = auth.getCurrentUser();
 
         hideStatusBar();
-        requestPermissions();
+        statusCheck();
+        checkNetwork();
+
         newUser = getIntent().getStringExtra("newUser");
         if (newUser != null) {
             if (newUser.equals("1")) {
@@ -110,6 +121,7 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 if (PrefConfig.GetPref(MainActivity.this, "newUser", "new").equals("1")) {
                     ShowDialog();
+
 
                 }
             }
@@ -205,6 +217,7 @@ public class MainActivity extends AppCompatActivity {
         } else {
             user_name.setText(PrefConfig.GetPref(MainActivity.this, "userPref", "username"));
             FirebaseMessaging.getInstance().subscribeToTopic("/topics/"+PrefConfig.GetPref(MainActivity.this,"userPref","userpin"));
+//            Toast.makeText(this, "subs"+PrefConfig.GetPref(MainActivity.this,"userPref","userpin"), Toast.LENGTH_SHORT).show();
         }
 
 
@@ -254,6 +267,7 @@ public class MainActivity extends AppCompatActivity {
         user_name.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                userChoice=true;
 
                 ShowDialog();
 
@@ -280,6 +294,8 @@ public class MainActivity extends AppCompatActivity {
                     } else {
                         user_name.setText(name);
                         FirebaseMessaging.getInstance().subscribeToTopic("/topics/"+pinCode);
+
+//                        Toast.makeText(MainActivity.this, "subs data"+pinCode, Toast.LENGTH_SHORT).show();
                         PrefConfig.SetPref(MainActivity.this, "userPref", "username", name);
                         PrefConfig.SetPref(MainActivity.this, "userPref", "userpin", pinCode);
                         PrefConfig.SetPref(MainActivity.this, "userPref", "useruid", uid);
@@ -308,7 +324,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
 
-                pinCode_txt.setText(PrefConfig.GetPref(MainActivity.this, "pinCode", "code"));
+                pinCode_txt.setText("Your Realtime PinCode: "+PrefConfig.GetPref(MainActivity.this, "pinCode", "code"));
 
             }
         }, 2000);
@@ -319,7 +335,12 @@ public class MainActivity extends AppCompatActivity {
 
         final Dialog dialog = new Dialog(MainActivity.this);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialog.setCancelable(false);
+        if(userChoice){
+            dialog.setCancelable(true);
+        }else{
+            dialog.setCancelable(false);
+
+        }
         dialog.setContentView(R.layout.necessary_field_dialog_layout);
 
         EditText et_name = (EditText) dialog.findViewById(R.id.et_name);
@@ -328,13 +349,14 @@ public class MainActivity extends AppCompatActivity {
         if (!PrefConfig.GetPref(MainActivity.this, "userPref", "username").equals("error")) {
             et_name.setText(PrefConfig.GetPref(MainActivity.this, "userPref", "username"));
             et_pinCode.setText(PrefConfig.GetPref(MainActivity.this, "userPref", "userpin"));
-            FirebaseMessaging.getInstance().unsubscribeFromTopic("/topics/"+PrefConfig.GetPref(MainActivity.this, "userPref", "userpin"));
         }
 
         CardView proceedBtn = (CardView) dialog.findViewById(R.id.proceed_btn);
+        LottieAnimationView animationView = (LottieAnimationView) dialog.findViewById(R.id.animationView);
         proceedBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                animationView.setVisibility(View.VISIBLE);
 
                 reference.child("User").child(user.getPhoneNumber()).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -357,6 +379,7 @@ public class MainActivity extends AppCompatActivity {
 
                             } else {
 
+
                                 HashMap hp = new HashMap();
                                 hp.put("name", et_name.getText().toString().trim());
                                 hp.put("pinCode", et_pinCode.getText().toString().trim());
@@ -376,9 +399,14 @@ public class MainActivity extends AppCompatActivity {
                                                 @Override
                                                 public void onComplete(@NonNull Task<Void> task) {
 
+                                                    FirebaseMessaging.getInstance().subscribeToTopic("/topics/"+et_pinCode.getText().toString().trim());
+//                                                    Toast.makeText(MainActivity.this, "subs_et", Toast.LENGTH_SHORT).show();
+
+
                                                     SetUserdetails();
 
 //                                                    Toast.makeText(MainActivity.this, "Done", Toast.LENGTH_SHORT).show();
+                                                    animationView.setVisibility(View.GONE);
                                                     dialog.dismiss();
 
                                                 }
@@ -390,6 +418,10 @@ public class MainActivity extends AppCompatActivity {
                                             });
 
                                         } else {
+                                            FirebaseMessaging.getInstance().unsubscribeFromTopic("/topics/"+PrefConfig.GetPref(MainActivity.this, "userPref", "userpin"));
+//                                            Toast.makeText(MainActivity.this, "unsubscribe"+PrefConfig.GetPref(MainActivity.this, "userPref", "userpin"), Toast.LENGTH_SHORT).show();
+
+
 
                                             HashMap hp = new HashMap();
                                             hp.put("pin", et_pinCode.getText().toString());
@@ -404,6 +436,7 @@ public class MainActivity extends AppCompatActivity {
 
 
                                                             SetUserdetails();
+                                                            animationView.setVisibility(View.GONE);
                                                             dialog.dismiss();
 
 //                                                            Toast.makeText(MainActivity.this, "done deleting", Toast.LENGTH_SHORT).show();
@@ -447,6 +480,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
 
+
                     }
                 });
 
@@ -463,16 +497,53 @@ public class MainActivity extends AppCompatActivity {
         logout_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FirebaseMessaging.getInstance().unsubscribeFromTopic(PrefConfig.GetPref(MainActivity.this,"userPref","userpin"));
-                auth.signOut();
-                SharedPreferences sharedPreferences  = getSharedPreferences("userPref",MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.clear();
-                editor.commit();
 
-                Intent intent = new Intent(MainActivity.this, PhoneNumber_Activity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
+                final Dialog dialog = new Dialog(MainActivity.this);
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                dialog.setCancelable(true);
+                dialog.setContentView(R.layout.logout_warning_dialog);
+                dialog.show();
+
+                CardView yes_btn = (CardView) dialog.findViewById(R.id.yes_back_btn);
+                CardView no_back_btn = (CardView) dialog.findViewById(R.id.no_back_btn);
+
+                yes_btn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialog.dismiss();
+                        FirebaseMessaging.getInstance().unsubscribeFromTopic(PrefConfig.GetPref(MainActivity.this,"userPref","userpin"));
+                        FirebaseMessaging.getInstance().unsubscribeFromTopic(user.getUid());
+                        String topic=  PrefConfig.GetPref(MainActivity.this,"tempTopic","topic");
+                        FirebaseMessaging.getInstance().unsubscribeFromTopic("cancel"+topic);
+
+
+                        auth.signOut();
+                        SharedPreferences sharedPreferences  = getSharedPreferences("userPref",MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.clear();
+                        editor.commit();
+
+                        Intent intent = new Intent(MainActivity.this, PhoneNumber_Activity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+
+                    }
+                });
+
+                 no_back_btn.setOnClickListener(new View.OnClickListener() {
+                     @Override
+                     public void onClick(View view) {
+                         dialog.dismiss();
+                     }
+                 });
+
+
+
+
+
+
+
+
             }
         });
     }
@@ -688,7 +759,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onError(DexterError error) {
                 // we are displaying a toast message for error message.
-                Toast.makeText(getApplicationContext(), "Error occurred! ", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getApplicationContext(), "Error occurred! ", Toast.LENGTH_SHORT).show();
             }
         })
                 // below line is use to run the permissions
@@ -769,9 +840,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        statusCheck();
         PrefConfig.SetPref(MainActivity.this, "markerPref", "marker", "0");
 
-        CheckHelpRequest();
     }
 
     private void CheckHelpRequest() {
@@ -816,7 +887,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void ShowHelpDialog(String name, String displayMessage, String phoneNumber, String uid, String timeStamp, String latlang) {
 
-
+        MediaPlayer mp = MediaPlayer.create(getApplicationContext(), R.raw.bell_sound);
+        mp.start();
         final Dialog dialog = new Dialog(MainActivity.this);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.setCancelable(true);
@@ -828,17 +900,20 @@ public class MainActivity extends AppCompatActivity {
         TextView user_name = (TextView) dialog.findViewById(R.id.user_name);
         user_name.setText(name);
         displayMsg.setText(displayMessage);
+        dialog.show();
+
 
 
         ignore_request.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                dialog.dismiss();
                 SharedPreferences preferences = getSharedPreferences("helpPref",MODE_PRIVATE);
                 SharedPreferences.Editor editor = preferences.edit();
                 editor.clear();
                 editor.commit();
                 FirebaseMessaging.getInstance().unsubscribeFromTopic("cancel"+uid);
-                dialog.dismiss();
 
             }
         });
@@ -848,22 +923,127 @@ public class MainActivity extends AppCompatActivity {
         help_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, ShareMapActivity.class);
-                intent.putExtra("latlang",latlang);
-                intent.putExtra("uid",uid);
-                intent.putExtra("name",name);
-                startActivity(intent);
-
-
                 dialog.dismiss();
+                if(PrefConfig.GetPref(MainActivity.this, "tempTopic", "topic").equals(uid)){
+                    PrefConfig.SetPref(MainActivity.this,"userActive","active",String.valueOf(System.currentTimeMillis()));
+                    PrefConfig.SetPref(MainActivity.this,"userHelp","user","false");
+                    Intent intent = new Intent(MainActivity.this, ShareMapActivity.class);
+                    intent.putExtra("latlang",latlang);
+                    intent.putExtra("uid",uid);
+                    intent.putExtra("name",name);
+                    startActivity(intent);
+                }else{
+                    MediaPlayer mp = MediaPlayer.create(getApplicationContext(), R.raw.error_sound);
+                    mp.start();
+
+                    Dialog dialog1 = new Dialog(MainActivity.this);
+                    dialog1.setCancelable(true);
+                    dialog1.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                    dialog1.setContentView(R.layout.session_expired_warning_dialog);
+
+
+                    CardView gobackBtn = (CardView) dialog1.findViewById(R.id.go_back_btn);
+                    gobackBtn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            dialog1.dismiss();
+                        }
+                    });
+
+                    dialog1.show();
+
+
+
+            }
+
             }
         });
 
 
-        dialog.show();
 
 
 
 
+    }
+
+
+    private void buildAlertMessageNoGps() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Your Location seems to be disabled, You have enable it to use the app.")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, final int id) {
+                        startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                    }
+                });
+//                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+//                    public void onClick(final DialogInterface dialog, final int id) {
+//                        dialog.cancel();
+//                    }
+//                });
+        final AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    public void statusCheck() {
+        final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            buildAlertMessageNoGps();
+
+        }else {
+            requestPermissions();
+        }
+    }
+
+
+
+    public boolean isNetworkAvailable() {
+
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        if (connectivityManager != null) {
+
+
+            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                NetworkCapabilities capabilities = connectivityManager.getNetworkCapabilities(connectivityManager.getActiveNetwork());
+                if (capabilities != null) {
+                    if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
+
+                        return true;
+                    } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
+
+                        return true;
+                    } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)) {
+
+                        return true;
+                    }
+                }
+            }
+        }
+
+
+        return false;
+
+    }
+
+    private void checkNetwork() {
+
+        if (!isNetworkAvailable() == true) {
+            new androidx.appcompat.app.AlertDialog.Builder(this)
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setCancelable(false)
+                    .setTitle("Internet Connection Alert")
+                    .setMessage("Please Check Your Internet Connection")
+                    .setPositiveButton("Close", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            finish();
+                        }
+                    }).show();
+        } else if (isNetworkAvailable() == true) {
+
+        }
     }
 }

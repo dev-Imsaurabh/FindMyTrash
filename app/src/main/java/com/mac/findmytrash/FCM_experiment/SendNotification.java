@@ -18,9 +18,9 @@ public class SendNotification {
             @Override
             public void onResponse(Call<PushNotification> call, Response<PushNotification> response) {
                 if(response.isSuccessful()){
-                    Toast.makeText(context, "successful", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(context, "successful", Toast.LENGTH_SHORT).show();
                 }else{
-                    Toast.makeText(context, "error", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(context, "error", Toast.LENGTH_SHORT).show();
 
                 }
             }

@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "591127156254",
+    "firebase_url": "https://findmybin-92e07-default-rtdb.firebaseio.com",
     "project_id": "findmybin-92e07",
     "storage_bucket": "findmybin-92e07.appspot.com"
   },
@@ -13,6 +14,14 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "591127156254-4fecp8hsnkinpd0is19sdpkdv86t3vgn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mac.findmytrash",
+            "certificate_hash": "6bf329e948d6f97f6f38ab0e347ea215a388e2f5"
+          }
+        },
         {
           "client_id": "591127156254-lgt5v6r8a9vm17frcgffmgtiksr623mc.apps.googleusercontent.com",
           "client_type": 3

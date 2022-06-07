@@ -1,6 +1,5 @@
 package com.mac.findmytrash.FCM_experiment;
 
-import android.app.Dialog;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -9,14 +8,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
+import android.media.MediaPlayer;
 import android.os.Build;
-import android.os.Handler;
-import android.os.Looper;
-import android.view.View;
-import android.widget.FrameLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -29,7 +22,6 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.mac.findmytrash.MainActivity;
 import com.mac.findmytrash.R;
-import com.mac.findmytrash.help_request.ShareMapActivity;
 import com.mac.findmytrash.map_location.PrefConfig;
 
 import java.util.Random;
@@ -59,58 +51,97 @@ public class FCMService extends FirebaseMessagingService {
         String fullMessage = message.getData().get("message");
 
 
-
         if (fullMessage.contains("help")) {
-            String[] splitMessageByComma1 = fullMessage.split(",");
-            String name1 = splitMessageByComma1[0];
-            String displayMessage1 = splitMessageByComma1[1];
-            String phoneNumber1 = splitMessageByComma1[2];
-            String uid1 = splitMessageByComma1[3];
-            String timeStamp1 = splitMessageByComma1[4];
-            String latlang1 = splitMessageByComma1[5];
+            String activeTime =PrefConfig.GetPref(this,"userActive","active");
+            if(!activeTime.equals("error")){
 
-            PrefConfig.SetPref(this, "helpPref", "helpmessage", fullMessage);
+                double checkDifference = System.currentTimeMillis()-Double.parseDouble(activeTime);
 
-            if(!PrefConfig.GetPref(this, "tempTopic", "topic").equals("error")){
-                FirebaseMessaging.getInstance().unsubscribeFromTopic("/topics/"+"cancel"+PrefConfig.GetPref(this, "tempTopic", "topic"));
-                PrefConfig.SetPref(this, "tempTopic", "topic", uid1);
-                FirebaseMessaging.getInstance().subscribeToTopic("/topics/"+"cancel"+uid1);
-            }else {
-                FirebaseMessaging.getInstance().subscribeToTopic("/topics/"+"cancel"+uid1);
-
-            }
-
-
-
-            FirebaseMessaging.getInstance().subscribeToTopic("/topics/"+"cancel"+uid);
-            FirebaseAuth auth= FirebaseAuth.getInstance();
-            FirebaseUser user = auth.getCurrentUser();
-            if(!user.getUid().equals(uid1)){
-                if(System.currentTimeMillis()-Double.parseDouble(timeStamp1)<3000){
-                    ShowNotification(displayMessage1, message);
-//                    ShowHelpDialog();
+                if(checkDifference>180000){
+                    PrefConfig.SetPref(this,"userHelp","user","true");
 
                 }
 
+                if(PrefConfig.GetPref(this,"userHelp","user").equals("true")||PrefConfig.GetPref(this,"userHelp","user").equals("error")){
+                    SetMessagePref(fullMessage,message);
+
+                }
+
+
+            }else{
+                SetMessagePref(fullMessage,message);
+
+
             }
 
-        } else if(fullMessage.equals("cancel"+uid)) {
+
+        } else if (fullMessage.equals("cancel" + uid)) {
 
 
-            SharedPreferences preferences = getSharedPreferences("helpPref",MODE_PRIVATE);
+            SharedPreferences preferences = getSharedPreferences("helpPref", MODE_PRIVATE);
             SharedPreferences.Editor editor = preferences.edit();
             editor.clear();
             editor.commit();
-            FirebaseMessaging.getInstance().unsubscribeFromTopic("/topics/"+"cancel"+uid);
+            FirebaseMessaging.getInstance().unsubscribeFromTopic("/topics/" + "cancel" + uid);
+            SharedPreferences preferences1 = getSharedPreferences("tempTopic",MODE_PRIVATE);
+            SharedPreferences.Editor editor1 = preferences1.edit();
+            editor1.clear();
+            editor1.commit();
+            PrefConfig.SetPref(this,"userHelp","user","true");
 
-        }else  if(fullMessage.contains("sharing")){
-            PrefConfig.SetPref(this,"rPref","rece",fullMessage);
+        } else if (fullMessage.contains("sharing")) {
+            PrefConfig.SetPref(this, "rPref", "rece", fullMessage);
         }
 
 
     }
 
+    private void SetMessagePref(String fullMessage, RemoteMessage message) {
+
+        String[] splitMessageByComma1 = fullMessage.split(",");
+        String name1 = splitMessageByComma1[0];
+        String displayMessage1 = splitMessageByComma1[1];
+        String phoneNumber1 = splitMessageByComma1[2];
+        String uid1 = splitMessageByComma1[3];
+        String timeStamp1 = splitMessageByComma1[4];
+        String latlang1 = splitMessageByComma1[5];
+
+        PrefConfig.SetPref(this, "helpPref", "helpmessage", fullMessage);
+
+        if (!PrefConfig.GetPref(this, "tempTopic", "topic").equals("error")) {
+            FirebaseMessaging.getInstance().unsubscribeFromTopic("/topics/" + "cancel" + PrefConfig.GetPref(this, "tempTopic", "topic"));
+            PrefConfig.SetPref(this, "tempTopic", "topic", uid1);
+            FirebaseMessaging.getInstance().subscribeToTopic("/topics/" + "cancel" + uid1);
+        } else {
+//                    ShowHelpDialog();
+
+            FirebaseMessaging.getInstance().subscribeToTopic("/topics/" + "cancel" + uid1);
+            PrefConfig.SetPref(this, "tempTopic", "topic", uid1);
+
+//                ShowHelpDialog();
+
+        }
+
+
+//            FirebaseMessaging.getInstance().subscribeToTopic("/topics/"+"cancel"+uid);
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        FirebaseUser user = auth.getCurrentUser();
+        Double checkDifference = System.currentTimeMillis() - Double.parseDouble(timeStamp1);
+
+        if (checkDifference < 180000) {
+
+            if (!user.getUid().equals(uid1)) {
+                ShowNotification(displayMessage1, message);
+//                    ShowHelpDialog();
+
+            }
+
+        }
+    }
+
     private void ShowNotification(String displayMessage, RemoteMessage message) {
+        MediaPlayer mp = MediaPlayer.create(getApplicationContext(), R.raw.help_me_please);
+        mp.start();
 
         Intent intent = new Intent(this, MainActivity.class);
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -150,7 +181,6 @@ public class FCMService extends FirebaseMessagingService {
     }
 
 
-
     private void ShowHelpDialog() {
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -159,6 +189,7 @@ public class FCMService extends FirebaseMessagingService {
 //        PendingIntent pendingIntent = PendingIntent.getActivity(this,0 /* request code */, intent,PendingIntent.FLAG_UPDATE_CURRENT);
 
 
-
     }
+
+
 }
