@@ -233,33 +233,46 @@
             android:textColor="@color/white"
             android:textSize="8dp" />
 
-<!--        <de.hdodenhof.circleimageview.CircleImageView-->
-<!--            android:id="@+id/help_notification"-->
-<!--            android:layout_width="40dp"-->
-<!--            android:layout_height="40dp"-->
-<!--            android:layout_centerVertical="true"-->
-<!--            android:layout_marginStart="16dp"-->
-<!--            android:layout_toEndOf="@id/mark_trash"-->
-<!--            android:background="@drawable/white_circulatr_back"-->
-<!--            android:padding="8dp"-->
-<!--            android:src="@drawable/ic_non_active"-->
-<!--            android:visibility="visible" />-->
+        <!--        <de.hdodenhof.circleimageview.CircleImageView-->
+        <!--            android:id="@+id/help_notification"-->
+        <!--            android:layout_width="40dp"-->
+        <!--            android:layout_height="40dp"-->
+        <!--            android:layout_centerVertical="true"-->
+        <!--            android:layout_marginStart="16dp"-->
+        <!--            android:layout_toEndOf="@id/mark_trash"-->
+        <!--            android:background="@drawable/white_circulatr_back"-->
+        <!--            android:padding="8dp"-->
+        <!--            android:src="@drawable/ic_non_active"-->
+        <!--            android:visibility="visible" />-->
 
-<!--        <TextView-->
-<!--            android:id="@+id/noti_txt"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_below="@id/show_map_btn"-->
-<!--            android:layout_centerHorizontal="true"-->
-<!--            android:layout_marginStart="8dp"-->
-<!--            android:layout_marginTop="8dp"-->
-<!--            android:layout_toEndOf="@id/mark_trash"-->
-<!--            android:text="Help notification"-->
-<!--            android:textColor="@color/white"-->
-<!--            android:textSize="8dp" />-->
+        <!--        <TextView-->
+        <!--            android:id="@+id/noti_txt"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_below="@id/show_map_btn"-->
+        <!--            android:layout_centerHorizontal="true"-->
+        <!--            android:layout_marginStart="8dp"-->
+        <!--            android:layout_marginTop="8dp"-->
+        <!--            android:layout_toEndOf="@id/mark_trash"-->
+        <!--            android:text="Help notification"-->
+        <!--            android:textColor="@color/white"-->
+        <!--            android:textSize="8dp" />-->
 
 
     </RelativeLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="16dp"
+
+        android:text="Open slider to mark dustbin on map !"
+        android:layout_marginTop="150dp"
+        android:textColor="@color/white"
+        android:gravity="center_vertical"
+        android:textSize="10dp"
+        android:drawableStart="@drawable/ic_bulb"/>
 
 
     <View

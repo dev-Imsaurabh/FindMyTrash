@@ -110,7 +110,6 @@ public class MainActivity extends AppCompatActivity {
         user = auth.getCurrentUser();
 
         hideStatusBar();
-        statusCheck();
         checkNetwork();
 
         newUser = getIntent().getStringExtra("newUser");
@@ -319,15 +318,25 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void SetCode() {
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
 
-                pinCode_txt.setText("Your Realtime PinCode: "+PrefConfig.GetPref(MainActivity.this, "pinCode", "code"));
+        String getPin =PrefConfig.GetPref(MainActivity.this, "pinCode", "code");
 
-            }
-        }, 2000);
+        if(getPin.equals("error")){
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    SetCode();
+
+                }
+            },2000);
+        }else{
+            pinCode_txt.setText("Your Realtime PinCode: "+getPin);
+
+        }
+
+
+
     }
 
     private void ShowDialog() {
@@ -736,6 +745,7 @@ public class MainActivity extends AppCompatActivity {
                         if (multiplePermissionsReport.areAllPermissionsGranted()) {
                             // do you work now
                             openMapFragment();
+
 //                            Toast.makeText(MainActivity.this, "All the permissions are granted..", Toast.LENGTH_SHORT).show();
 
                         }
@@ -840,7 +850,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        statusCheck();
         PrefConfig.SetPref(MainActivity.this, "markerPref", "marker", "0");
 
     }
@@ -975,6 +984,7 @@ public class MainActivity extends AppCompatActivity {
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(final DialogInterface dialog, final int id) {
                         startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+//                        finish();
                     }
                 });
 //                .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -1045,5 +1055,13 @@ public class MainActivity extends AppCompatActivity {
         } else if (isNetworkAvailable() == true) {
 
         }
+    }
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        statusCheck();
+
     }
 }

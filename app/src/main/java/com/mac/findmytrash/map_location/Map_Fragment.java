@@ -72,7 +72,6 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.mac.findmytrash.FCM_experiment.Model.NotificationData;
 import com.mac.findmytrash.FCM_experiment.Model.PushNotification;
 import com.mac.findmytrash.FCM_experiment.SendNotification;
-import com.mac.findmytrash.Login.OTP_Verification_Activity;
 import com.mac.findmytrash.MainActivity;
 import com.mac.findmytrash.R;
 import com.mac.findmytrash.experimental.GoogleDirection;
@@ -104,6 +103,7 @@ public class Map_Fragment extends Fragment implements OnMapReadyCallback {
     private boolean admin = false;
     private boolean mapMarkFlag = false;
     private String area;
+    private boolean done =false;
     private String address;
     private String pinCode;
     private Double pinLatitude, pinLongitude;
@@ -171,8 +171,9 @@ public class Map_Fragment extends Fragment implements OnMapReadyCallback {
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.icon(bitmapDescriptor(getContext(), R.drawable.custom_marker));
         markerOptions.position(destinantion);
-        markerOptions.title(name);
-        cusMap.addMarker(markerOptions);
+        markerOptions.title(name+" is here");
+       Marker marker =cusMap.addMarker(markerOptions);
+        marker.showInfoWindow();
 //
 //
 //        MarkerOptions markerOptions1 = new MarkerOptions();
@@ -575,6 +576,9 @@ public class Map_Fragment extends Fragment implements OnMapReadyCallback {
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
+
+
+
         mFusedLocationClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
             @Override
             public void onComplete(@NonNull Task<Location> task) {
@@ -586,7 +590,7 @@ public class Map_Fragment extends Fragment implements OnMapReadyCallback {
                     final Runnable runnable = new Runnable() {
                         public void run() {
 
-                            getContinuousLocation();
+                            getContinuousLocation(map);
 
                             handler.postDelayed(this, 5000);
 
@@ -594,7 +598,7 @@ public class Map_Fragment extends Fragment implements OnMapReadyCallback {
                     };
                     handler.post(runnable);
 
-                    getLocation(map, task);
+
 
                     pinMarkerPoint(map);
 
@@ -622,7 +626,7 @@ public class Map_Fragment extends Fragment implements OnMapReadyCallback {
 
     }
 
-    private void getContinuousLocation() {
+    private void getContinuousLocation(GoogleMap map) {
 
         try {
             if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
@@ -646,6 +650,14 @@ public class Map_Fragment extends Fragment implements OnMapReadyCallback {
                     double currentLatitude = location.getLatitude();
                     double currentLongitude = location.getLongitude();
 
+                    if(task.getResult()!=null){
+                        getLocation(map, task);
+
+                    }
+
+
+
+
                     GetPostalCode(currentLatitude, currentLongitude);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -659,54 +671,69 @@ public class Map_Fragment extends Fragment implements OnMapReadyCallback {
 
     private void MarkLocationsOnMap(GoogleMap map) {
         list = new ArrayList<>();
-        reference.child("Area").child(PrefConfig.GetPref(getContext(), "pinCode", "code")).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot snapshot1 : snapshot.getChildren()) {
-                    SubmitModel mapLocationModel = snapshot1.getValue(SubmitModel.class);
-
-                    list.add(mapLocationModel);
-
-
-                }
-
-                Marker marker = null;
-
-                for (int i = 0; i < list.size(); i++) {
-                    marker = map.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(list.get(i).getSubmitLat()), Double.parseDouble(list.get(i).getSubmitLong())))
-                            .anchor(0.5f, 0.5f)
-
-                            .icon(bitmapDescriptor(getContext(), R.drawable.custom_marker2)));
-                    marker.setTag("Marked by: " + list.get(i).getSubmitName() + " near-> " + list.get(i).getSubmitAddress());
+        String getPin=PrefConfig.GetPref(getContext(), "pinCode", "code");
+        if(getPin.equals("error")){
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    MarkLocationsOnMap(tempMap);
 
                 }
+            },2000);
+
+        }else{
+            reference.child("Area").child(getPin).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    for (DataSnapshot snapshot1 : snapshot.getChildren()) {
+                        SubmitModel mapLocationModel = snapshot1.getValue(SubmitModel.class);
+
+                        list.add(mapLocationModel);
 
 
-                map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-                    @Override
-                    public boolean onMarkerClick(Marker marker) {
-
-                        Object tag = marker.getTag();
-                        if (!tag.equals("user")) {
-
-                            ShowDialog(String.valueOf(marker.getPosition().latitude), String.valueOf(marker.getPosition().longitude), tag);
-
-
-                        }
-
-
-                        return false;
                     }
-                });
+
+                    Marker marker = null;
+
+                    for (int i = 0; i < list.size(); i++) {
+                        marker = map.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(list.get(i).getSubmitLat()), Double.parseDouble(list.get(i).getSubmitLong())))
+                                .anchor(0.5f, 0.5f)
+
+                                .icon(bitmapDescriptor(getContext(), R.drawable.custom_marker2)));
+                        marker.setTag("Marked by: " + list.get(i).getSubmitName() + " near-> " + list.get(i).getSubmitAddress());
+
+                    }
 
 
-            }
+                    map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                        @Override
+                        public boolean onMarkerClick(Marker marker) {
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+                            Object tag = marker.getTag();
+                            if (!tag.equals("user")) {
 
-            }
-        });
+                                ShowDialog(String.valueOf(marker.getPosition().latitude), String.valueOf(marker.getPosition().longitude), tag);
+
+
+                            }
+
+
+                            return false;
+                        }
+                    });
+
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+
+        }
+
 
 
     }
@@ -714,20 +741,25 @@ public class Map_Fragment extends Fragment implements OnMapReadyCallback {
 
     public void getLocation(GoogleMap map, Task<Location> task) {
         try {
-            Marker marker;
-            Location location = task.getResult();
-            double currentLatitude = location.getLatitude();
-            double currentLongitude = location.getLongitude();
-            LatLng latLng = new LatLng(currentLatitude, currentLongitude);
-            MarkerOptions markerOptions = new MarkerOptions();
-            markerOptions.icon(bitmapDescriptor(getContext(), R.drawable.custom_marker));
-            markerOptions.position(latLng);
-            markerOptions.title("i am here");
-            marker = map.addMarker(markerOptions);
-            marker.setTag("user");
-            float zoomLevel = 13.0f; //This goes up to 21
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoomLevel));
-            GetPostalCode(currentLatitude, currentLongitude);
+            if(!done){
+                Marker marker;
+                Location location = task.getResult();
+                double currentLatitude = location.getLatitude();
+                double currentLongitude = location.getLongitude();
+                LatLng latLng = new LatLng(currentLatitude, currentLongitude);
+                MarkerOptions markerOptions = new MarkerOptions();
+                markerOptions.icon(bitmapDescriptor(getContext(), R.drawable.custom_marker));
+                markerOptions.position(latLng);
+                markerOptions.title("You are here");
+                marker = map.addMarker(markerOptions);
+                marker.showInfoWindow();
+                marker.setTag("user");
+                float zoomLevel = 13.0f; //This goes up to 21
+                map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoomLevel));
+                GetPostalCode(currentLatitude, currentLongitude);
+                done=true;
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -758,7 +790,7 @@ public class Map_Fragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onPause() {
         mMapView.onPause();
-        getContinuousLocation();
+        getContinuousLocation(tempMap);
         super.onPause();
     }
 
